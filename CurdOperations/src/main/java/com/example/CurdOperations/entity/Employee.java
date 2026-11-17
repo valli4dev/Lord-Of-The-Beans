@@ -2,6 +2,7 @@ package com.example.CurdOperations.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="Emp")
+@Builder
 public class Employee {
 
     @Id

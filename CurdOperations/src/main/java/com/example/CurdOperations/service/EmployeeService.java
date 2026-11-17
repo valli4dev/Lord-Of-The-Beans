@@ -1,6 +1,7 @@
 package com.example.CurdOperations.service;
 
 import com.example.CurdOperations.entity.Employee;
+import com.example.CurdOperations.exceptions.EmployeeNotFoundException;
 import com.example.CurdOperations.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,11 @@ public class EmployeeService {
      * @return the employee if found, otherwise null
      */
     public Employee findById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
+        return employeeRepository.findById(id)
+                .orElseThrow(()-> new EmployeeNotFoundException(
+                                "Employee not found with id: " + id
+                        )
+                        );
     }
     /**
      * Retrieves all employee records from the database.
@@ -56,7 +61,13 @@ public class EmployeeService {
      */
     public Employee updateEmployee(Long id, Employee updatedEmployee) {
 
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        Employee employee = employeeRepository.findById(id)
+                        .orElseThrow(()->
+                                new EmployeeNotFoundException(
+                                        "Employee not found with id: " + id
+                                )
+                        );
         employee.setName(updatedEmployee.getName());
         employee.setSalary(updatedEmployee.getSalary());
         employee.setDept(updatedEmployee.getDept());
@@ -71,7 +82,12 @@ public class EmployeeService {
      * @return the updated employee record
      */
     public Employee updateSalary(Long id, double salary) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() ->
+                        new EmployeeNotFoundException(
+                                "Employee not found with id: " + id
+                        )
+                );
         employee.setSalary(salary);
         return employeeRepository.save(employee);
     }
@@ -83,5 +99,4 @@ public class EmployeeService {
     public void delete(Long id) {
         employeeRepository.deleteById(id);
     }
-
 }
